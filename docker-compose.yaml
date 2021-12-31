@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    container_name: mongo-blog
+    command: mongod # this this first if you have not set username & password in mongodb
+#    command: mongod --auth // run this after you set username & password in mongodb
