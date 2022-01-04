@@ -23,6 +23,7 @@ func ArticleRouter() *mux.Router {
 
 	article.HandleFunc(route.ARTIKEL,controller.Get).Methods(http.MethodGet)
 	article.HandleFunc(route.ARTIKEL,controller.Post).Methods(http.MethodPost)
+	article.HandleFunc(route.ARTIKEL_MANIPULATION,controller.GetById).Methods(http.MethodGet)
 	article.HandleFunc(route.ARTIKEL_MANIPULATION,controller.Delete).Methods(http.MethodDelete)
 	article.HandleFunc(route.ARTIKEL_MANIPULATION,controller.Update).Methods(http.MethodPut)
 
@@ -35,6 +36,7 @@ func CommentRouter() *mux.Router {
 	comment.Use(middleware.ErrorHandler,middleware.Auth)
 
 	comment.HandleFunc(route.COMMENT,controller.Post).Methods(http.MethodPost)
+	comment.HandleFunc(route.MANIPULATION_COMMENT,controller.GetById).Methods(http.MethodGet)
 	comment.HandleFunc(route.MANIPULATION_COMMENT,controller.Delete).Methods(http.MethodDelete)
 	comment.HandleFunc(route.MANIPULATION_COMMENT,controller.Update).Methods(http.MethodPut)
 	return comment

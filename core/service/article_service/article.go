@@ -7,6 +7,7 @@ import (
 
 type Article interface {
 	Get(page int64) []response.Article
+	GetById(articleId string) response.Article
 	Post(article request.Article) string
 	Delete(author string,articleId string) string
 	Update(request request.UpdateArticle) string

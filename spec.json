@@ -1,0 +1,1758 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "blog mongodb",
+    "description": "rest api for exercise mongodb and rest api",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": ["auth"],
+        "description": "end point for login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              },
+              "examples": {
+                "valid": {
+                  "value": {
+                    "email": "email@gmail.com",
+                    "password": "rahasia"
+                  }
+                },
+                "invalid": {
+                  "value": {
+                    "email": "",
+                    "password": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response if login is success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                    "success": {
+                      "value" : {
+                        "code": 200,
+                        "status": "login berhasil",
+                        "data": {
+                          "token": "token"
+                        }
+                      }
+                    }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "response if bad request (username / password wrong)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "properties": {
+                        "code": {
+                          "type": "integer"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "data": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "bad request": {
+                    "value": {
+                      "code": 400,
+                      "status": "username / password salah",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "response if account not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "properties": {
+                        "code": {
+                          "type": "integer"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "data": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "not found": {
+                    "value": {
+                      "code": 404,
+                      "status": "akun tidak terdaftar",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "response if internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "properties": {
+                        "code": {
+                          "type": "integer"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "data": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "internal server error": {
+                    "value": {
+                      "code": 500,
+                      "status": "terjadi kesalahan pada sistem kami",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register": {
+      "description": "endpoint for register",
+      "post": {
+        "tags": ["auth"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "required": true,
+                    "uniqueItems": true
+                  },
+                  "email": {
+                    "type": "string",
+                    "required": true,
+                    "uniqueItems": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              },
+              "examples": {
+                "valid": {
+                  "value": {
+                    "username": "username",
+                    "email": "mail@gmail.com",
+                    "password": "password"
+                  }
+                },
+                "invalid": {
+                  "value": {
+                    "username": "",
+                    "email": "",
+                    "password": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response if register success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "code": 200,
+                      "status": "registrasi berhasil",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "response if bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "bad request": {
+                    "value": {
+                      "code": 400,
+                      "string": "terjadi kesalahan pada data yang kamu kirim",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "response if internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data":{
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "internal server error": {
+                    "value": {
+                      "code": 500,
+                      "string": "terjadi kesalahan pada sistem kami",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles": {
+      "post": {
+        "tags": ["artikel"],
+        "description": "post article",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "title": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "author": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              },
+              "examples": {
+                "valid": {
+                  "value": {
+                    "body": "body",
+                    "title": "title",
+                    "author": "author"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response if post article success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "code": 200,
+                      "status": "artikel berhasil ditambahkan",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "response if user unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "unauthenticated": {
+                    "value": {
+                      "code": 401,
+                      "status": "token kamu tidak valid",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "response if user send invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "bad request": {
+                    "value": {
+                      "code": 400,
+                      "status": "terjadi kesalahan pada data yang kamu kirim",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "response if internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "internal server error": {
+                    "value": {
+                      "code": 500,
+                      "status": "terjadi kesalahan pada sistem kami",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "end point to get article",
+        "parameters": [
+          {
+            "description": "this parameter in optional (get page one data) used for pagination",
+            "in": "query",
+            "name": "page",
+            "required": false
+          }
+        ],
+        "tags": ["artikel"],
+        "responses": {
+          "200": {
+            "description": "response if success get articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "code": 200,
+                      "status": "success",
+                      "data": {
+                        "prev": "/1",
+                        "next": "/3",
+                        "articles": [
+                          {
+                            "id": "123123kdjals19203",
+                            "title": "title",
+                            "body": "body",
+                            "author": "author"
+                          },
+                          {
+                            "id": "123123kdjals19203",
+                            "title": "title",
+                            "body": "body",
+                            "author": "author",
+                            "comments": [
+                              {
+                                "id": "aasdasd-0192akjsdlasd",
+                                "author": "authorComment",
+                                "comment": "comment"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "response if user is unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                    "unauthenticated": {
+                      "value": {
+                        "code": 401,
+                        "status": "token kamu tidak valid",
+                        "data": null
+                      }
+                    }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "response if page is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "not found": {
+                    "value": {
+                      "code": 404,
+                      "status": "halaman yang kamu cari tidak ditemukan",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "response if internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "internal server error": {
+                    "value": {
+                      "code": 500,
+                      "data": null,
+                      "status": "terjadi kesalahan pada sistem kami"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{articleId}": {
+      "put": {
+        "tags": ["artikel"],
+        "description": "endpoint for update article",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "body": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              },
+              "examples": {
+                "valid": {
+                  "value": {
+                    "title": "title baru",
+                    "body": "body baru"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+            "200": {
+              "description": "response if success update articles",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "integer"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "data": {
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "examples": {
+                    "success": {
+                      "value": {
+                        "code": 200,
+                        "status": "artikel berhasil diupdate",
+                        "data": null
+                      }
+                    }
+                  }
+                }
+              }
+            },
+          "400": {
+            "description": "response if bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "unauthenticated": {
+                    "value": {
+                      "code": 400,
+                      "status": "artikel yang kamu kirimkan tidak valid",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+            "401": {
+              "description": "response if user is unauthenticated",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "data": {
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "examples": {
+                    "unauthenticated": {
+                      "value": {
+                        "code": 401,
+                        "status": "token kamu tidak valid",
+                        "data": null
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "response if article is not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "data": {
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "examples": {
+                    "not found": {
+                      "value": {
+                        "code": 404,
+                        "status": "artikel tidak ditemukan",
+                        "data": null
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "response if internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "data": {
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "examples": {
+                    "internal server error": {
+                      "value": {
+                        "code": 500,
+                        "status": "terjadi kesalahan pada sistem kami",
+                        "data": null
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+      },
+      "delete": {
+        "tags": ["artikel"],
+        "description": "endpoint for delete article",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "response if success delete articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "code": 200,
+                      "status": "artikel berhasil dihapus",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "response if user is unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "unauthenticated": {
+                    "value": {
+                      "code": 401,
+                      "status": "token kamu tidak valid",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "response if article is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "not found": {
+                    "value": {
+                      "code": 404,
+                      "status": "artikel tidak ditemukan",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "response if internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "internal server error": {
+                    "value": {
+                      "code": 500,
+                      "status": "terjadi kesalahan pada sistem kami",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["artikel"],
+        "description": "endpoint for get specific article",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "response if success get article",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "code": 200,
+                      "status": "success",
+                      "data": {
+                        "author": "author",
+                        "title": "title",
+                        "body": "body",
+                        "comments": []
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "response if user is unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "unauthenticated": {
+                    "value": {
+                      "code": 401,
+                      "status": "token kamu tidak valid",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "response if article is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "not found": {
+                    "value": {
+                      "code": 404,
+                      "status": "artikel tidak ditemukan",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "response if internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "internal server error": {
+                    "value": {
+                      "code": 500,
+                      "status": "terjadi kesalahan pada sistem kami",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{articleId}/comments": {
+      "description": "endpoint for post comment",
+      "post": {
+        "tags": ["komentar"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "aritcleId",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "integer"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "data": {
+                    "type": "object"
+                  }
+                }
+              },
+              "examples": {
+                "valid": {
+                  "value": {
+                    "author": "author",
+                    "comment": "comment"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response if success post comment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "code": 200,
+                      "status": "berhasil memberikan komentar",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "response comment in invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "unauthenticated": {
+                    "value": {
+                      "code": 400,
+                      "status": "komentar yang kamu berikan tidak valid",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "response if user is unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "unauthenticated": {
+                    "value": {
+                      "code": 401,
+                      "status": "token kamu tidak valid",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "response if article is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "not found": {
+                    "value": {
+                      "code": 404,
+                      "status": "artikel tidak ditemukan",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "response if internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "internal server error": {
+                    "value": {
+                      "code": 500,
+                      "status": "terjadi kesalahan pada sistem kami",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{articleId}/comments/{commentId}": {
+      "get": {
+        "tags": ["komentar"],
+        "description": "endpoint to get detail of comment",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "response if get comment by success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "code": 200,
+                      "status": "success",
+                      "data": {
+                        "articleId": "articleId",
+                        "commentId": "commentId",
+                        "comment": {
+                          "author": "author",
+                          "comment": "KOMENTAR DARI TESTING NI BOSS",
+                          "createdAt": "2021-12-31T18:49:19.849+07:00",
+                          "id": "61ceee3fb32a101ab2de0407"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "response if user is unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "unauthenticated": {
+                    "value": {
+                      "code": 401,
+                      "status": "unauthenticated",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "response if comment is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "not found": {
+                    "value": {
+                      "code": 404,
+                      "status": "not found",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "response if internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "internal server error" : {
+                    "value": {
+                      "code": 500,
+                      "status": "internal server error",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["komentar"],
+        "description": "enpoint for update comment",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "author": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "comment": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              },
+              "examples": {
+                "valid": {
+                  "value": {
+                    "author": "newAuthor",
+                    "comment": "newComment"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response if update comment is success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "code": 200,
+                      "status": "komentar berhasil diupdate",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "response if bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "bad request": {
+                    "value": {
+                      "code": 400,
+                      "status": "komentar yang kamu kirim tidak valid",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "response if user is unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "unauthenticated": {
+                    "value": {
+                      "code": 401,
+                      "status": "token kamu tidak valid",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "response if comment or article is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "comment not found": {
+                    "value": {
+                      "code": 404,
+                      "status": "komentar tidak ditemukan",
+                      "data": null
+                    }
+                  },
+                  "article not found": {
+                    "value": {
+                      "code": 404,
+                      "status": "artikel tidak ditemukan",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "response if internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "internal server error": {
+                    "value": {
+                      "code": 500,
+                      "status": "terjadi kesalahan pada sistem kami",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["komentar"],
+        "description": "enpoint for delete comment",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "response if delete comment success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "code": 200,
+                      "status": "komentar berhasil dihapus",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "response if comment is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "not found": {
+                    "value": {
+                      "code": 404,
+                      "status": "komentar tidak ditemukan",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "response if internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "internal server error": {
+                    "value": {
+                      "code": 500,
+                      "status": "terjadi kesalahan pada sistem kami",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

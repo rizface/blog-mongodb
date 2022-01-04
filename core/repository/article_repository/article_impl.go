@@ -21,6 +21,16 @@ func (a *article) Get(db *mongo.Database, ctx context.Context, skip int64, limit
 	return cursor,err
 }
 
+func (a *article) GetById(db *mongo.Database, ctx context.Context, articleId string) *mongo.SingleResult {
+	objId,_ := primitive.ObjectIDFromHex(articleId)
+	cursor := db.Collection("articles").FindOne(ctx,bson.M{"_id":objId},options.FindOne().SetProjection(bson.M{
+		"title":1,
+		"body":1,
+		"createdAt":1,
+	}))
+	return cursor
+}
+
 func (a *article) Post(db *mongo.Database, ctx context.Context, request request.Article) (interface{},error)  {
 	result,err := db.Collection("articles").InsertOne(ctx,bson.M{
 		"author":request.Author,

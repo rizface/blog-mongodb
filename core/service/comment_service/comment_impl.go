@@ -7,6 +7,7 @@ import (
 	"blog-mongo/helper"
 	"errors"
 	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -23,6 +24,20 @@ func NewComment(db *mongo.Database, valid *validator.Validate, repo comment_resp
 		valid: valid,
 		repo:  repo,
 	}
+}
+
+func (c *comment) GetById(articleId string, commentId string) interface{} {
+	valid := primitive.IsValidObjectID(articleId)
+	helper.PanicCustomException(exception.NotFound{Err:errors.New("artikel tidak ditemukan")},valid == false)
+	valid = primitive.IsValidObjectID(commentId)
+	helper.PanicCustomException(exception.NotFound{Err:errors.New("komentar tidak ditemukan")},valid == false)
+	ctx,cancel := helper.CreateCtx(5)
+	defer cancel()
+	result,err := c.repo.GetById(c.db,ctx,articleId,commentId)
+	helper.PanicCustomException(exception.NotFound{Err:errors.New("komentar tidak ditemukan")},errors.Is(err,mongo.ErrNoDocuments))
+	helper.PanicCustomException(exception.InternalError{Err:errors.New("terjadi kesalahan pada sistem kami")}, err != nil)
+	comment := result["comments"].(bson.A)
+	return comment[0]
 }
 
 func (c *comment) Post(request request.Comment) string {

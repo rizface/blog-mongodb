@@ -28,13 +28,21 @@ func (a article) Get(w http.ResponseWriter, r *http.Request) {
 		page = 1
 	} else {
 		page,err = strconv.Atoi(pageParam)
-		helper.PanicCustomException(exception.BadRequest{Err: errors.New("halaman tidak ditemukan")},err != nil)
+		helper.PanicCustomException(exception.NotFound{Err: errors.New("halaman tidak ditemukan")},page < 0 || err != nil)
 	}
 	result := a.service.Get(int64(page))
 	helper.JsonWriter(w,http.StatusOK,"success",map[string]interface{} {
 		"next": "?page="+strconv.Itoa(page + 1),
 		"prev": "?page="+strconv.Itoa(page - 1),
 		"articles": result,
+	})
+}
+
+func (a article) GetById(w http.ResponseWriter, r *http.Request) {
+	articleId := helper.GetParamsValue(r,"articleId")
+	result := a.service.GetById(articleId)
+	helper.JsonWriter(w,http.StatusOK,"success",map[string]interface{}{
+		"article":result,
 	})
 }
 

@@ -32,17 +32,26 @@ func (a *article) Get(page int64) []response.Article {
 	var limit int64 = 15
 	ctx,cancel := helper.CreateCtx(10)
 	defer cancel()
-	if page == 1 {
-		skip = 0
-	} else {
-		skip = (page - 1) * 15
-	}
+	skip = (page - 1) * 15
 	cursor,err := a.repo.Get(a.db,ctx,skip,limit)
 	helper.Panic(err)
 	cCtx,cCancel := helper.CreateCtx(5)
 	defer cCancel()
 	err = cursor.All(cCtx,&result)
 	helper.Panic(err)
+	return result
+}
+
+func (a *article) GetById(articleId string) response.Article {
+	var result response.Article
+	valid := primitive.IsValidObjectID(articleId)
+	helper.PanicCustomException(exception.NotFound{Err: errors.New("artikel tidak ditemukan")},valid == false)
+	ctx,cancel := helper.CreateCtx(5)
+	defer cancel()
+	cursor := a.repo.GetById(a.db,ctx,articleId)
+	err := cursor.Decode(&result)
+	helper.PanicCustomException(exception.NotFound{Err:errors.New("artikel tidak ditemukan")},err != nil && errors.Is(err,mongo.ErrNoDocuments))
+	helper.PanicCustomException(exception.InternalError{Err:errors.New("terjadi kesalahan pada sistem kami")},err != nil)
 	return result
 }
 

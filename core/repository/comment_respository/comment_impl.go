@@ -14,7 +14,21 @@ func NewComment() Comment {
 	return &comment{}
 }
 
-func (c comment) Post(db *mongo.Database, ctx context.Context, request request.Comment) (string,bool,error){
+func (c *comment) GetById(db *mongo.Database, ctx context.Context, articleId string, commentId string) (bson.M,error) {
+	var result bson.M
+	objComment,_ := primitive.ObjectIDFromHex(commentId)
+	objArticle,_ := primitive.ObjectIDFromHex(articleId)
+	cursor := db.Collection("articles").FindOne(ctx,bson.M{
+		"$and":bson.A{
+			bson.M{"_id":objArticle},
+			bson.M{"comments.id":objComment},
+		},
+	})
+	err := cursor.Decode(&result)
+	return result,err
+}
+
+func (c *comment) Post(db *mongo.Database, ctx context.Context, request request.Comment) (string,bool,error){
 	objId, _ := primitive.ObjectIDFromHex(request.ArticleId)
 	commentId := primitive.NewObjectID()
 	result,err := db.Collection("articles").UpdateOne(ctx, bson.M{
@@ -26,7 +40,7 @@ func (c comment) Post(db *mongo.Database, ctx context.Context, request request.C
 	return commentId.Hex(),result.ModifiedCount > 0, err
 }
 
-func (c comment) Delete(db *mongo.Database, ctx context.Context, request request.DeleteComment) (bool, error) {
+func (c *comment) Delete(db *mongo.Database, ctx context.Context, request request.DeleteComment) (bool, error) {
 	articleId,_ := primitive.ObjectIDFromHex(request.ArticleId)
 	commentId,_ := primitive.ObjectIDFromHex(request.CommentId)
 	result,err := db.Collection("articles").UpdateOne(ctx,bson.M{
@@ -43,7 +57,7 @@ func (c comment) Delete(db *mongo.Database, ctx context.Context, request request
 	return result.ModifiedCount > 0, err
 }
 
-func (c comment) Update(db *mongo.Database, ctx context.Context, request request.UpdateComment) (bool, error) {
+func (c *comment) Update(db *mongo.Database, ctx context.Context, request request.UpdateComment) (bool, error) {
 	articleId,_ := primitive.ObjectIDFromHex(request.ArticleId)
 	commentId,_ := primitive.ObjectIDFromHex(request.CommentId)
 	result,err := db.Collection("articles").UpdateOne(ctx,bson.M{
